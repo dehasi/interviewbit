@@ -5,68 +5,38 @@ import java.util.List;
 
 public class SpriralOrderMatrix {
     // DO NOT MODIFY THE LIST. IT IS READ ONLY
-    public ArrayList<Integer> spiralOrder(final List<ArrayList<Integer>> A) {
-        if (A.size() == 1) return A.get(0);
-        ArrayList<Integer> result = new ArrayList<>();
-        int n = Math.min(A.size() / 2, A.get(0).size()/2);
+    public ArrayList<Integer> spiralOrder(final List<ArrayList<Integer>> matrix) {
+        if (matrix.size() == 1) return matrix.get(0);
+        ArrayList<Integer> result = new ArrayList<>(matrix.get(0).size() * matrix.size());
 
-        for (int l = 0; l < n; l++) {
-            result.addAll(cut(A, l));
+        int t = 0;
+        int b = matrix.size() - 1;
+        int l = 0;
+        int r = matrix.get(0).size() - 1;
+
+        int dir = 0;
+
+        while (t <= b && l <= r) {
+            if (dir == 0) {
+                for (int i = l; i <= r; i++) result.add(matrix.get(t).get(i));
+                ++t;
+                dir = 1;
+            } else if (dir == 1) {
+                for (int i = t; i <= b; i++) result.add(matrix.get(i).get(r));
+                --r;
+                dir = 2;
+            } else if (dir == 2) {
+                for (int i = r; i >= l; --i) result.add(matrix.get(b).get(i));
+                --b;
+                dir = 3;
+            } else {
+                for (int i = b; i >= t; --i) result.add(matrix.get(i).get(l));
+                ++l;
+                dir = 0;
+            }
         }
-        if(hasCenter(A)) {
-            result.add(extractCenter(A));
-        }
+
         return result;
     }
 
-    List<Integer> cut(final List<ArrayList<Integer>> matrix, int layer) {
-        List<Integer> list = new ArrayList<>();
-        int xWith = matrix.get(0).size()-1;
-        int yHeight = matrix.size()-1;
-
-        P p1 = new P(0+layer, 0 + layer);
-        P p2 = new P(xWith-layer, 0 + layer);
-        P p3 = new P(xWith-layer, yHeight - layer);
-        P p4 = new P(0+layer, yHeight - layer);
-
-        for (int x = p1.x; x < p2.x; x++) {
-            int point = matrix.get(p1.y).get(x);
-            list.add(point);
-        }
-        for (int y = p2.y; y < p3.y; y++) {
-            int point = matrix.get(y).get(p2.x);
-            list.add(point);
-        }
-        for (int x = p3.x; x > p4.x; x--) {
-            int point = matrix.get(p3.y).get(x);
-            list.add(point);
-        }
-        for (int y = p4.y; y > p1.y; y--) {
-            int point = matrix.get(y).get(p4.x);
-            list.add(point);
-        }
-        return list;
-    }
-
-    boolean hasCenter(final List<ArrayList<Integer>> matrix) {
-        return (matrix.size() % 2 != 0) && (matrix.get(0).size() % 2 != 0);
-    }
-    Integer extractCenter(final List<ArrayList<Integer>> matrix){
-        int x = matrix.get(0).size()/2;
-        int y = matrix.size()/2;
-        return matrix.get(y).get(x);
-    }
-    static class P {
-        final int x;
-        final int y;
-
-        P(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-        @Override
-        public String toString() {
-            return String.format("{x:%s, y:%s}", x, y);
-        }
-    }
 }
