@@ -6,22 +6,22 @@ import java.util.List;
 public class SpriralOrderMatrix {
     // DO NOT MODIFY THE LIST. IT IS READ ONLY
     public ArrayList<Integer> spiralOrder(final List<ArrayList<Integer>> A) {
+        if (A.size() == 1) return A.get(0);
         ArrayList<Integer> result = new ArrayList<>();
-        int n = Math.max(A.size() / 2, A.get(0).size()/2);
+        int n = Math.min(A.size() / 2, A.get(0).size()/2);
+
         for (int l = 0; l < n; l++) {
             result.addAll(cut(A, l));
         }
-//        if(A.size() % 2 != 0) {
-//            int x = n;
-//            result.add(A.get(x).get(x));
-//        }
+        if(hasCenter(A)) {
+            result.add(extractCenter(A));
+        }
         return result;
     }
 
-
     List<Integer> cut(final List<ArrayList<Integer>> matrix, int layer) {
         List<Integer> list = new ArrayList<>();
-        int xWith = matrix.size()-1;
+        int xWith = matrix.get(0).size()-1;
         int yHeight = matrix.size()-1;
 
         P p1 = new P(0+layer, 0 + layer);
@@ -46,6 +46,15 @@ public class SpriralOrderMatrix {
             list.add(point);
         }
         return list;
+    }
+
+    boolean hasCenter(final List<ArrayList<Integer>> matrix) {
+        return (matrix.size() % 2 != 0) && (matrix.get(0).size() % 2 != 0);
+    }
+    Integer extractCenter(final List<ArrayList<Integer>> matrix){
+        int x = matrix.get(0).size()/2;
+        int y = matrix.size()/2;
+        return matrix.get(y).get(x);
     }
     static class P {
         final int x;
