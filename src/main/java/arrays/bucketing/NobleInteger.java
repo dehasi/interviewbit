@@ -11,9 +11,7 @@ public class NobleInteger {
         for (int i = 0; i < n; i++) {
             if (a.get(i) < 0) continue;
             if (a.get(i) == (n - 1 - i)) {
-                if (i < n - 1) {
-                    if (a.get(i) < a.get(i + 1)) return 1;
-                }
+                if (i < n - 1 && a.get(i) < a.get(i + 1)) return 1;
             }
         }
         return -1;
